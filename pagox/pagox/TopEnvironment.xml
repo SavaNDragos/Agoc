@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<EnvironmentDef> 
+  
+  <Property Name="Location" Value="London" />
+  <Property Name="Cluster"  Value="HighEnd" />
+  <Property Name="LocationAdmin" Value="admin_${Location}"/>
+  <Import FileLocation="../CommonEnvironment.xml" />
+  <Property Name="ClusterLanguage"  Value="HighEnd_${allLanguages}" />
+  <Import FileLocation="../General.xml" />
+  
+</EnvironmentDef>

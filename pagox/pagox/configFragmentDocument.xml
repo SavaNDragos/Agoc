@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<ConfigurationFrag>
+  <Fragment>
+    job {
+  </Fragment>
+  <Fragment ImportConfigurationFrag="../${Location}scmDefinition.xml" if="1=1"/>
+  <Fragment ImportConfigurationFrag="../scmDefinition.xml" if="1=1"/>
+  <Fragment ImportConfigurationFrag="../scmDefinition.xml"/>
+  <Fragment>
+    }  
+  </Fragment>
+</ConfigurationFrag>

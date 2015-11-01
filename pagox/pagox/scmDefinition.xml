@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<ConfigurationFrag>
+  <Fragment>
+    publish {
+      print "we are working from ${Location}"
+    }
+  </Fragment>
+  <Fragment>
+    stepDecision {
+    print "A test will be created for ${LocationAdmin}"
+    }
+  </Fragment>
+</ConfigurationFrag>

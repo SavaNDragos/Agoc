@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<EnvironmentDef>
+
+  <Property Name="moreLocation" Value="Romania" />
+  <Property Name="allLanguages" Value="english-${language}" />
+  <Import FileLocation="../General.xml" />
+  
+</EnvironmentDef>
