@@ -19,6 +19,7 @@ namespace Agoc
                 Console.WriteLine("Incorect usage of commandline parameters. Please review.");
             }
 
+            //get environment properties passed from command line
             var initialEnvironment = OptionsProcessor.GetEnvironmentFromParameters(options.EnvironmentParameters);
             
             var manager = new OperationsManager()
@@ -27,17 +28,19 @@ namespace Agoc
                 EnvironmentConfigurationFile = options.EnvironmentXml,
                 FragmentsConfigurationFile = options.StepsXml,
                 PrintFileLocation =  options.PrintFileLocation,
-
             };
 
-            if (options.PrintInFile)
+            //get output method
             {
-                manager.AddProcessingOption(ProcessingOptions.PrintFile);
-            }
+                if (options.PrintInFile)
+                {
+                    manager.AddProcessingOption(ProcessingOptions.PrintFile);
+                }
 
-            if (options.PrintInConsole)
-            {
-                manager.AddProcessingOption(ProcessingOptions.PrintConsole);
+                if (options.PrintInConsole)
+                {
+                    manager.AddProcessingOption(ProcessingOptions.PrintConsole);
+                }
             }
 
             try

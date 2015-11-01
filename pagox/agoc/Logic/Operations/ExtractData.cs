@@ -296,7 +296,7 @@ namespace Agoc.Logic.Operations
         /// </summary>
         /// <param name="inOutFileLocation"></param>
         /// <param name="inOutText"></param>
-        public static void PublishConfigurationFile(string inOutFileLocation, string inOutText)
+        public static void PublishConfigurationFile(string inOutText,string inOutFileLocation)
         {
             if (!File.Exists(inOutFileLocation))
             {
@@ -311,17 +311,15 @@ namespace Agoc.Logic.Operations
         }
 
         /// <summary>
-        /// 
+        /// Print result of configuration interpretation in console. 
         /// </summary>
-        /// <param name="configurationFileLocation"></param>
-        /// <param name="inEnvironmentDictionary"></param>
-        public static void PublishConfigurationInConsole(string configurationFileLocation,
-            Dictionary<string, string> inEnvironmentDictionary)
+        /// <param name="inOutText">Output text.</param>
+        public static void PublishConfigurationInConsole(string inOutText)
         {
-            var resultOfInterpretation = PublishConfiguration(configurationFileLocation, inEnvironmentDictionary);
-
-            Console.WriteLine("We have the result of interpretation:");
-            Console.WriteLine(resultOfInterpretation);
+            Console.WriteLine("The resolved configuration file:");
+            Console.WriteLine(Environment.NewLine);
+            Console.WriteLine(inOutText);
+            Console.WriteLine(Environment.NewLine);
         }
 
         public static string ResolveFragment(string inFragment, Dictionary<string, string> inEnvironmentDictionary)
