@@ -368,13 +368,19 @@ namespace Agoc.Logic.Operations
                                   "}");
                 }
 
+                //get keys
+                var tempListOfKeys = inEnvironmentDictionary.Keys.ToList();
+                forReturn.RemoveAll(obj => !tempListOfKeys.Contains(obj.Substring(2, obj.Length - 3)));
 
                 var newConfigValue = inFragment;
                 //start to replace the environment values we found
                 foreach (var iterValueForReplace in forReturn)
                 {
-                    newConfigValue = inFragment.Replace(iterValueForReplace,
-                        inEnvironmentDictionary[iterValueForReplace.Substring(2, iterValueForReplace.Length - 3)]);
+                    if (inEnvironmentDictionary.ContainsKey(iterValueForReplace.Substring(2, iterValueForReplace.Length - 3)))
+                    {
+                        newConfigValue = inFragment.Replace(iterValueForReplace,
+                            inEnvironmentDictionary[iterValueForReplace.Substring(2, iterValueForReplace.Length - 3)]);
+                    }
                 }
                 if (newConfigValue == inFragment)
                 {
