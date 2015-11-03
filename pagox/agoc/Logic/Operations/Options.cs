@@ -14,10 +14,13 @@ namespace Agoc.Logic.Operations
             HelpText = "Xml that contains environment definition.")]
         public string EnvironmentXml { get; set; }
 
-        // omitting long name, default --verbose
         [Option('s', "step", Required = true,
             HelpText = "Xml that contains the properties/steps definitian.")]
         public string StepsXml { get; set; }
+
+        [Option('r', "rulesBook", Required = false,
+            HelpText = "Xml that contains the rules we need to apply on different steps.")]
+        public string RulesBookXml { get; set; }
 
         [Option('p', "environmentParameters", Required = false, HelpText = "Pass extra environment variables.")]
         public string EnvironmentParameters { get; set; }

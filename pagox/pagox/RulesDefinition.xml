@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<RulesBook>
+
+  <Rule name="MuscelLocation" description="Location Muscel">
+    <Equal>
+      <Member>
+        ${Location}
+      </Member>
+      <Member>
+        Muscel
+      </Member>
+    </Equal>
+  </Rule>
+
+  <Rule name="ExtendedLocation" description="Extended Location">
+    <Equal>
+      <Member>
+        ${Location}
+      </Member>
+      <Member>
+        Muscel
+      </Member>
+    </Equal>
+  </Rule>
+  
+</RulesBook>

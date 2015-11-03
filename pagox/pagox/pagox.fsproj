@@ -66,6 +66,7 @@
     <Content Include="General.xml" />
     <Content Include="configFragmentDocument.xml" />
     <Content Include="scmDefinition.xml" />
+    <Content Include="RulesDefinition.xml" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="FSharp.Data">

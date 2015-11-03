@@ -9,6 +9,11 @@
   <Fragment>
     stepDecision {
     print "A test will be created for ${LocationAdmin}"
+    ${h}
+    more casesd }${LocationAdmin}
+    maybe ${a}
+    ${LocationAdmin}
+    or ${c}
     }
   </Fragment>
 </ConfigurationFrag>

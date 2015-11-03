@@ -11,6 +11,9 @@ namespace Agoc.Logic.Operations
 {
     public static class ExtractData
     {
+
+        #region ENVIRONMENT_DEFINITION
+
         /// <summary>
         /// We will extract all the environments variable from the environment definitian files.
         /// Note: This is a recursive method.
@@ -18,7 +21,8 @@ namespace Agoc.Logic.Operations
         /// <param name="inEnvironmentFileLocation"></param>
         /// <param name="isLastNode"></param>
         /// <returns></returns>
-        public static Dictionary<string, string> GetProperties (string inEnvironmentFileLocation, Dictionary<string,string> inPreviousValues , bool isLastNode)
+        public static Dictionary<string, string> GetProperties(string inEnvironmentFileLocation,
+            Dictionary<string, string> inPreviousValues, bool isLastNode)
         {
             var forReturn = new Dictionary<string, string>();
             var ourValues = new Dictionary<string, string>();
@@ -33,18 +37,21 @@ namespace Agoc.Logic.Operations
             FileStream textInFile;
             if (File.Exists(resolvedEnvironmentFileLocation))
             {
-                textInFile = new FileStream(resolvedEnvironmentFileLocation, FileMode.Open, FileAccess.Read, FileShare.Read);
+                textInFile = new FileStream(resolvedEnvironmentFileLocation, FileMode.Open, FileAccess.Read,
+                    FileShare.Read);
             }
             else
             {
-                throw new FileNotFoundException(string.Format("File {0} wasn't found.Please verify the commandLineProperties.", resolvedEnvironmentFileLocation));
+                throw new FileNotFoundException(
+                    string.Format("File {0} wasn't found.Please verify the commandLineProperties.",
+                        resolvedEnvironmentFileLocation));
             }
 
             //FileStream fs = new FileStream(filename, FileMode.OpenOrCreate);
             TextReader reader = new StreamReader(textInFile);
 
-            var SerializerObj = new XmlSerializer(typeof(EnvironmentDef)); // we will do an xml serialization
-            var tempEnvironmentDef = (EnvironmentDef)SerializerObj.Deserialize(reader);
+            var SerializerObj = new XmlSerializer(typeof (EnvironmentDef)); // we will do an xml serialization
+            var tempEnvironmentDef = (EnvironmentDef) SerializerObj.Deserialize(reader);
 
             //include new values in dictionary
             foreach (var environmentDefItem in tempEnvironmentDef.Items)
@@ -84,7 +91,7 @@ namespace Agoc.Logic.Operations
                 if (environmentDefItem is EnvironmentDefImport)
                 {
                     var environmentProperty = environmentDefItem as EnvironmentDefImport;
-                    
+
                     //add new values found
                     foreach (var iterValueFound in ourValues)
                     {
@@ -94,7 +101,10 @@ namespace Agoc.Logic.Operations
                         }
                     }
 
-                    foreach (var newValue in GetProperties(inEnvironmentFileLocation + @"/" + environmentProperty.FileLocation, inPreviousValues, false))
+                    foreach (
+                        var newValue in
+                            GetProperties(inEnvironmentFileLocation + @"/" + environmentProperty.FileLocation,
+                                inPreviousValues, false))
                     {
                         //if it is coming from a top node it is clear that it should have been overriden
                         if (!ourValues.ContainsKey(newValue.Key))
@@ -125,7 +135,8 @@ namespace Agoc.Logic.Operations
                             {
                                 if (ourValues.ContainsKey(iterValue.Substring(2, iterValue.Length - 3)))
                                 {
-                                    newValue = newValue.Replace(iterValue, ourValues[iterValue.Substring(2, iterValue.Length - 3)]);
+                                    newValue = newValue.Replace(iterValue,
+                                        ourValues[iterValue.Substring(2, iterValue.Length - 3)]);
                                     shouldContinue = true;
                                 }
                             }
@@ -197,20 +208,25 @@ namespace Agoc.Logic.Operations
         /// </summary>
         /// <param name="inDictionary">The dictionary from which we want to obtain a list of its keys.</param>
         /// <returns>A list of keys.</returns>
-        public static List<string> GetListOfKeys (Dictionary<string,string> inDictionary)
+        public static List<string> GetListOfKeys(Dictionary<string, string> inDictionary)
         {
             return inDictionary.Select(obj => obj.Key).ToList();
         }
+
+        #endregion
+
+        #region CONFIGURATION_FRAGMENTS
 
         /// <summary>
         /// Get configuration from file.
         /// </summary>
         /// <param name="inConfigurationFileLocation"></param>
         /// <param name="inEnvironmentDictionary"></param>
+        /// <param name="inBookRules"></param>
         /// <param name="isLastNode"></param>
         /// <returns></returns>
         public static List<string> GetConfiguration(string inConfigurationFileLocation,
-            Dictionary<string, string> inEnvironmentDictionary, bool isLastNode)
+            Dictionary<string, string> inEnvironmentDictionary, Dictionary<string,RulesBookRule> inBookRules, bool isLastNode)
         {
             var configFragmentList = new List<string>();
             var resolvedFragmentList = new List<string>();
@@ -219,14 +235,15 @@ namespace Agoc.Logic.Operations
             var resolvedConfigurationFileLocation = inConfigurationFileLocation;
             if (inConfigurationFileLocation.Contains("${"))
             {
-                resolvedConfigurationFileLocation = ResolveFragment(inConfigurationFileLocation,inEnvironmentDictionary);
+                resolvedConfigurationFileLocation = ResolveFragment(inConfigurationFileLocation, inEnvironmentDictionary);
             }
 
             var isFileFound = true;
-            FileStream textInFile=null;
+            FileStream textInFile = null;
             if (File.Exists(resolvedConfigurationFileLocation))
             {
-                textInFile = new FileStream(resolvedConfigurationFileLocation, FileMode.Open, FileAccess.Read, FileShare.Read);
+                textInFile = new FileStream(resolvedConfigurationFileLocation, FileMode.Open, FileAccess.Read,
+                    FileShare.Read);
             }
             else
             {
@@ -251,6 +268,33 @@ namespace Agoc.Logic.Operations
 
             foreach (ConfigurationFragFragment iterConfigurationFrag in tempConfigurationFrag.Fragment)
             {
+                //verify if it has a rule and if it has verify it
+                if (!string.IsNullOrWhiteSpace(iterConfigurationFrag.applyRule))
+                {
+                    if (inBookRules != null)
+                    {
+                        if (inBookRules.ContainsKey(iterConfigurationFrag.applyRule))
+                        {
+                            if (!IsRuleRespected(inBookRules[iterConfigurationFrag.applyRule], inEnvironmentDictionary))
+                            {
+                                continue;
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine(
+                            string.Format("We tried to verify rule {0} but this rule wasn't found in the ruleBook passed.",
+                                iterConfigurationFrag.applyRule));
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine(
+                            string.Format("We tried to verify rule {0} but there wasn't a ruleBook defined.",
+                                iterConfigurationFrag.applyRule));
+                    }
+                }
+
                 if (string.IsNullOrWhiteSpace(iterConfigurationFrag.ImportConfigurationFrag))
                 {
                     configFragmentList.Add(iterConfigurationFrag.Value);
@@ -264,14 +308,16 @@ namespace Agoc.Logic.Operations
                     configFragmentList.AddRange(
                         GetConfiguration(
                             inConfigurationFileLocation + "//" + tempExtraConfigFragmentFileName,
-                            inEnvironmentDictionary, false));
+                            inEnvironmentDictionary, inBookRules, false));
                 }
             }
 
             //we should resolve the environment values 
             if (isLastNode)
             {
-                resolvedFragmentList.AddRange(configFragmentList.Select(iterConfigFragment => ResolveFragment(iterConfigFragment, inEnvironmentDictionary)));
+                resolvedFragmentList.AddRange(
+                    configFragmentList.Select(
+                        iterConfigFragment => ResolveFragment(iterConfigFragment, inEnvironmentDictionary)));
                 return resolvedFragmentList;
             }
 
@@ -285,9 +331,9 @@ namespace Agoc.Logic.Operations
         /// <param name="inEnvironmentDictionary"></param>
         /// <returns>The string specific for yje configuration file that was passed</returns>
         public static string PublishConfiguration(string configurationFileLocation,
-            Dictionary<string, string> inEnvironmentDictionary)
+            Dictionary<string, string> inEnvironmentDictionary, Dictionary<string,RulesBookRule> inBookRules)
         {
-            var resultOfInterpretation = GetConfiguration(configurationFileLocation, inEnvironmentDictionary, true);
+            var resultOfInterpretation = GetConfiguration(configurationFileLocation, inEnvironmentDictionary, inBookRules, true);
             return resultOfInterpretation.Aggregate(string.Empty, (current, configFragment) => current + configFragment);
         }
 
@@ -296,11 +342,11 @@ namespace Agoc.Logic.Operations
         /// </summary>
         /// <param name="inOutFileLocation"></param>
         /// <param name="inOutText"></param>
-        public static void PublishConfigurationFile(string inOutText,string inOutFileLocation)
+        public static void PublishConfigurationFile(string inOutText, string inOutFileLocation)
         {
             if (!File.Exists(inOutFileLocation))
             {
-              var result =  File.Create(inOutFileLocation);
+                var result = File.Create(inOutFileLocation);
                 result.Close();
             }
 
@@ -321,6 +367,7 @@ namespace Agoc.Logic.Operations
             Console.WriteLine(inOutText);
             Console.WriteLine(Environment.NewLine);
         }
+
 
         public static string ResolveFragment(string inFragment, Dictionary<string, string> inEnvironmentDictionary)
         {
@@ -376,7 +423,9 @@ namespace Agoc.Logic.Operations
                 //start to replace the environment values we found
                 foreach (var iterValueForReplace in forReturn)
                 {
-                    if (inEnvironmentDictionary.ContainsKey(iterValueForReplace.Substring(2, iterValueForReplace.Length - 3)))
+                    if (
+                        inEnvironmentDictionary.ContainsKey(iterValueForReplace.Substring(2,
+                            iterValueForReplace.Length - 3)))
                     {
                         newConfigValue = inFragment.Replace(iterValueForReplace,
                             inEnvironmentDictionary[iterValueForReplace.Substring(2, iterValueForReplace.Length - 3)]);
@@ -392,5 +441,65 @@ namespace Agoc.Logic.Operations
 
             return inFragment;
         }
+
+        #endregion
+
+        #region RULES_BOOK
+
+        /// <summary>
+        /// Get configuration from file.
+        /// </summary>
+        /// <param name="inConfigurationFileLocation"></param>
+        /// <param name="inEnvironmentDictionary"></param>
+        /// <param name="isLastNode"></param>
+        /// <returns></returns>
+        public static Dictionary<string, RulesBookRule> GetRulesBook(string inConfigurationFileLocation)
+        {
+            var resolvedFragmentList = new List<string>();
+
+            var isFileFound = true;
+            FileStream textInFile = null;
+            if (File.Exists(inConfigurationFileLocation))
+            {
+                textInFile = new FileStream(inConfigurationFileLocation, FileMode.Open, FileAccess.Read, FileShare.Read);
+            }
+            else
+            {
+                isFileFound = false;
+            }
+
+            //in case the file isn't found we should throw an exception
+            if (!isFileFound)
+            {
+                throw new FileNotFoundException(
+                    string.Format("File {0} wasn't found.Please verify the commandLineProperties.",
+                        inConfigurationFileLocation));
+            }
+
+
+            //FileStream fs = new FileStream(filename, FileMode.OpenOrCreate);
+            TextReader reader = new StreamReader(textInFile);
+
+            XmlSerializer SerializerObj = new XmlSerializer(typeof (RulesBook));
+            // we will do an xml serialization
+            RulesBook tempConfigurationFrag = (RulesBook) SerializerObj.Deserialize(reader);
+
+            //get all rules and return thgem as a dictionary
+            return tempConfigurationFrag.Rule.ToDictionary(iterRule => iterRule.name);
+        }
+
+        public static bool IsRuleRespected(RulesBookRule inRule, Dictionary<string, string> inEnvironmentDefinition)
+        {
+            string firstValue = ResolveFragment(inRule.Equal[0], inEnvironmentDefinition);
+            string secondValue = ResolveFragment(inRule.Equal[1], inEnvironmentDefinition);
+
+            if (firstValue.ToUpper() == secondValue.ToUpper())
+                return true;
+
+            return false;
+        }
+
+
+        #endregion
     }
 }

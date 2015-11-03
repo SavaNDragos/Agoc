@@ -4,7 +4,7 @@
   <Fragment>
     job {
   </Fragment>
-  <Fragment ImportConfigurationFrag="../${Location}scmDefinition.xml"/>
+  <Fragment ImportConfigurationFrag="../${Location}scmDefinition.xml" applyRule="MuscelLocation"/>
   <Fragment ImportConfigurationFrag="../scmDefinition.xml" />
   <Fragment ImportConfigurationFrag="../scmDefinition.xml"/>
   <Fragment>

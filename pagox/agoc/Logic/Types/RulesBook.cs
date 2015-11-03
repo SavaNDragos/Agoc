@@ -6,80 +6,85 @@ using System.Threading.Tasks;
 
 namespace Agoc.Logic.Types
 {
+
+
     /// <remarks/>
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
     [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
-    public partial class ConfigurationFrag
+    public partial class RulesBook
     {
 
-        private ConfigurationFragFragment[] fragmentField;
+        private RulesBookRule[] ruleField;
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("Fragment")]
-        public ConfigurationFragFragment[] Fragment
+        [System.Xml.Serialization.XmlElementAttribute("Rule")]
+        public RulesBookRule[] Rule
         {
             get
             {
-                return this.fragmentField;
+                return this.ruleField;
             }
             set
             {
-                this.fragmentField = value;
+                this.ruleField = value;
             }
         }
     }
 
     /// <remarks/>
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    public partial class ConfigurationFragFragment
+    public partial class RulesBookRule
     {
 
-        private string importConfigurationFragField;
+        private string[] equalField;
 
-        private string applyRuleField;
+        private string nameField;
 
-        private string valueField;
+        private string descriptionField;
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string ImportConfigurationFrag
+        [System.Xml.Serialization.XmlArrayItemAttribute("Member", IsNullable = false)]
+        public string[] Equal
         {
             get
             {
-                return this.importConfigurationFragField;
+                return this.equalField;
             }
             set
             {
-                this.importConfigurationFragField = value;
+                this.equalField = value;
             }
         }
 
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string applyRule
+        public string name
         {
             get
             {
-                return this.applyRuleField;
+                return this.nameField;
             }
             set
             {
-                this.applyRuleField = value;
+                this.nameField = value;
             }
         }
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlTextAttribute()]
-        public string Value
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string description
         {
             get
             {
-                return this.valueField;
+                return this.descriptionField;
             }
             set
             {
-                this.valueField = value;
+                this.descriptionField = value;
             }
         }
     }
+
+
+
 }

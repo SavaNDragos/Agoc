@@ -27,6 +27,7 @@ namespace Agoc
                 EnvironmentConfigurationFile = options.EnvironmentXml,
                 FragmentsConfigurationFile = options.StepsXml,
                 PrintFileLocation =  options.PrintFileLocation,
+                RulesBookFile = options.RulesBookXml,
             };
 
             //get output method

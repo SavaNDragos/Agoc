@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Agoc.Logic.Types;
 
 namespace Agoc.Logic.Operations
 {
@@ -11,8 +12,10 @@ namespace Agoc.Logic.Operations
     {
         public string EnvironmentConfigurationFile { get; set; }
         public string FragmentsConfigurationFile { get; set; }
+        public string RulesBookFile { get; set; }
         public Dictionary<string, string> InitialEnvironmentDictionary { get; set; }
         private List<ProcessingOptions> InProcessingOptionses { get; set; } 
+        public Dictionary<string,RulesBookRule> RulesBook { get; set; }
         public string PrintFileLocation { get; set; }
 
         public OperationsManager()
@@ -30,8 +33,17 @@ namespace Agoc.Logic.Operations
         /// </summary>
         public void Process()
         {
+            //get environment definition
             var tempEnvioronmentDefinition = ExtractData.GetProperties(EnvironmentConfigurationFile, InitialEnvironmentDictionary, true);
-            var resultOfInterpretation = ExtractData.PublishConfiguration(FragmentsConfigurationFile, tempEnvioronmentDefinition);
+
+            //get rules book if it was passed
+            if (!string.IsNullOrWhiteSpace(RulesBookFile))
+            {
+                RulesBook = ExtractData.GetRulesBook(RulesBookFile);
+            }
+
+            var resultOfInterpretation = ExtractData.PublishConfiguration(FragmentsConfigurationFile,
+                tempEnvioronmentDefinition, RulesBook);
 
             if (InProcessingOptionses.Contains(ProcessingOptions.PrintFile))
             {

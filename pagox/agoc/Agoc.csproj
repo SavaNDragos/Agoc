@@ -54,6 +54,7 @@
     <Compile Include="Logic\Operations\ProcessingOptions.cs" />
     <Compile Include="Logic\Types\ConfigurationFrag.cs" />
     <Compile Include="Logic\Types\EnvironmentDef.cs" />
+    <Compile Include="Logic\Types\RulesBook.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
