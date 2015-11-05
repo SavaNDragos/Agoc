@@ -2,10 +2,7 @@
 
 <RulesBook>
 
-  <Rules ImportRuleBook="../RuleBookGeneral.xml"/>
-  <Rules ImportRuleBook="../RuleBookGeneral.xml"/>
-
-  <Rule name="MuscelLocationMuscelLocation" description="Location Muscel">
+  <Rule name="MuscelRoLocation" description="Location Muscel">
     <Equal>
       <Member>
         ${Location}
@@ -27,9 +24,4 @@
     </Equal>
   </Rule>
 
-  <RuleColection name="MultipleRules" description="better limitation">
-    <ApplyRule name="MuscelLocation" />
-    <ApplyRule name="MuscelRoLocation"/>
-  </RuleColection>
-  
 </RulesBook>

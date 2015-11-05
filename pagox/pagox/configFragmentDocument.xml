@@ -2,12 +2,15 @@
 
 <ConfigurationFrag>
   <Fragment>
+    &lt;xml&gt;
+    &lt;/more&gt;
     job {
   </Fragment>
   <Fragment ImportConfigurationFrag="../${Location}scmDefinition.xml" applyRule="MuscelLocation"/>
   <Fragment ImportConfigurationFrag="../scmDefinition.xml" />
   <Fragment ImportConfigurationFrag="../scmDefinition.xml"/>
   <Fragment>
-    }  
+    }
+    whyn not
   </Fragment>
 </ConfigurationFrag>
