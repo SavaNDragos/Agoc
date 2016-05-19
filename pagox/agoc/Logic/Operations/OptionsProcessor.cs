@@ -21,9 +21,19 @@ namespace Agoc.Logic.Operations
                     var tempKeyAndValue = resultedValue.Split(new string[] {":"}, StringSplitOptions.None).ToList();
                     if (tempKeyAndValue.Count != 0 && tempKeyAndValue.Count != 2)
                     {
-                        throw new ArgumentException("The environmentParameters are incorrectly configurated;");
+                        //we need to treat the posibility of a path
+                        var pathCollection = tempKeyAndValue[1];
+                        for (int i=2;i<tempKeyAndValue.Count;i++)
+                        {
+                            pathCollection += ":" + tempKeyAndValue[i];
+                        }
+                        forReturn.Add(tempKeyAndValue[0], pathCollection);
+                        //throw new ArgumentException("The environmentParameters are incorrectly configurated;");
                     }
-                    forReturn.Add(tempKeyAndValue[0], tempKeyAndValue[1]);
+                    else
+                    {
+                        forReturn.Add(tempKeyAndValue[0], tempKeyAndValue[1]);
+                    }
                 }
             }
 
